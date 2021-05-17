@@ -1,19 +1,46 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
-router.get("/register", async (req,res) => {
+router.post("/register", async (req,res) => {
+    
+    try {
 
-    //res.send("auth rooot");
-    const user = await new User({
-        username: "chabrik",
-        email : "abdoo.chbrik@gmail.com",
-        password :"chabrik00"
+        // hashed password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        // new user
+        const newUser =  new User({
+            username: req.body.username,
+            email : req.body.email,
+            password : hashedPassword,
+        })
+        
+        //save user and return it
+        const user = await newUser.save();
+        res.status(200).json(user);      
+    } catch (error) {
+        console.log(error)}
+    });
+    
+    //***********LOGIN ********/
+
+router.post("/login", async (req,res) => {
+
+        try {
+        const user = await User.findOne({ email : req.body.email})
+        !user && res.status(404).json("user not found");
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password)
+        !validPassword && res.status(404).json("wrong password");
+
+        res.status(200).json(user)
+            
+        } catch (error) {
+          console.log(error);    
+        }
     })
+   
 
-    await user.save();
-    res.send(ok);
-
-
-})
-
-module.exports = router
+module.exports = router;
