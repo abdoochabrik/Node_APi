@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
         const user = userId 
         ? await User.findById(userId)
         : await User.findOne({ username : username });
-        const {password, ...other} = user._doc;
+        const {passwordo, ...other} = user._doc;
         res.status(200).json(other);
     } catch (error) {
         res.status(500).json(error)
