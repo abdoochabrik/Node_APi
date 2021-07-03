@@ -16,7 +16,8 @@ app.use(
 
 app.use(express.json({ limit: '0.5kb' }));
 
-// prevent nosql injection
+//prevent nosql injection
+
 const mongoSanitize = require('express-mongo-sanitize');
 app.use(mongoSanitize());
 
