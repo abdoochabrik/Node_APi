@@ -1,6 +1,25 @@
 const express = require("express");
 const app = express()
 
+//secure from dos attacks
+const limitter = require('express-rate-limit');
+
+app.use(
+    limitter({
+      windowMs: 5000,
+      max: 5 ,
+      message: {
+          message: 'vous avez depasser le nombre de requetes autorisés',
+      },
+    })
+)
+
+app.use(express.json({ limit: '0.5kb' }));
+
+// prevent nosql injection
+const mongoSanitize = require('express-mongo-sanitize');
+app.use(mongoSanitize());
+
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");

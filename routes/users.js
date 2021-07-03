@@ -130,4 +130,16 @@ router.get("/friends/:userId", async (req,res) => {
     }
 });
 
+// find all users
+
+router.get("/users",  (req,res) => {
+    User.find({}, function (err,users){
+        if(err){
+            res.send("wrong")
+            next()
+        }
+        res.json(users)
+    })
+})
+
 module.exports = router

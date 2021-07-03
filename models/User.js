@@ -38,15 +38,18 @@ const UserSchema = new mongoose.Schema({
 
     desc:{
         type: String,
-        max: 50 
+        max: 50 ,
+        default: ""
     },
     city:{
         type: String,
-        max: 50
+        max: 50,
+        default: ""
     },
     from:{
         type: String,
-        max: 50
+        max: 50,
+         default: ""
     },
 
    // { timestamps : true}

@@ -3,7 +3,9 @@ const Post = require("../models/Post");
 const User = require("../models/User");
 const { get } = require("./users");
 
+
 //**************create a post *****////
+
 router.post("/", async (req,res) => {
     const newPost = await new Post(req.body);
     try {
@@ -17,7 +19,6 @@ router.post("/", async (req,res) => {
 //**************delete post ******//
 router.delete("/:id", async (req,res) => {
     try {
-
     //const user = await User.findById(req.body.userId);
     const post = await Post.findById(req.params.id);
     if(req.body.userId === post.userId){
