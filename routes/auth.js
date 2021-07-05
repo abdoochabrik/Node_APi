@@ -1,46 +1,42 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const auth = require("../middleware/auth");
 
 router.post("/register", async (req,res) => {
     
+
     try {
-
-        // hashed password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-        // new user
-        const newUser =  new User({
-            username: req.body.username,
-            email : req.body.email,
-            password : hashedPassword,
-        })
-        
-        //save user and return it
-        const user = await newUser.save();
-        res.status(200).json(user);      
+        const user = new User(req.body)
+        await user.save()
+        const token = await user.generateAuthToken()
+        res.status(201).send({ user, token })
     } catch (error) {
-        res.status(500).json(error)
+        res.status(400).send(error)
     }
+
+
+
+
     });
     
     //***********LOGIN ********/
 
 router.post("/login", async (req,res) => {
 
-        try {
-        const user = await User.findOne({ email : req.body.email})
-        !user && res.status(404).json("user not found");
 
-        const validPassword = await bcrypt.compare(req.body.password, user.password)
-        !validPassword && res.status(404).json("wrong password");
 
-        res.status(200).json(user)
-            
-        } catch (error) {
-          res.status(500).json(error)
+
+    try {
+        const { username, password } = req.body
+        const user = await User.findByCredentials(username, password)
+        if (!user) {
+            return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
+        const token = await user.generateAuthToken()
+        res.send({ user, token })
+    } catch (error) {
+        res.status(400).send(error)
+    }
     })
    
 

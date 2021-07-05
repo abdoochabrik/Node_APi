@@ -27,7 +27,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const userRoute = require("./routes/users")
 const authRoute = require("./routes/auth")
-const postRoute = require("./routes/posts")
+const postRoute = require("./routes/Posts")
 const conversationRoute = require("./routes/conversations")
 const messageRoute = require("./routes/messages")
 const bodyParser = require("body-parser")
@@ -35,7 +35,7 @@ dotenv.config()
 const path = require("path")
 app.use(express.json())
 app.use(helmet())
-app.use(bodyParser.json());
+app.use(express.json());
 const multer = require("multer"); 
 app.use(morgan("common"))
 app.use("/api/users", userRoute)
