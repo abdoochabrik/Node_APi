@@ -21,13 +21,20 @@ app.use(express.json({ limit: '0.5kb' }));
 const mongoSanitize = require('express-mongo-sanitize');
 app.use(mongoSanitize());
 
+//prevent xss attacks
+//app.use(xss());
+const helmet = require("helmet");
+
+
+
+
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const helmet = require("helmet");
+
 const morgan = require("morgan");
 const userRoute = require("./routes/users")
 const authRoute = require("./routes/auth")
-const postRoute = require("./routes/posts")
+const postRoute = require("./routes/Posts")
 const conversationRoute = require("./routes/conversations")
 const messageRoute = require("./routes/messages")
 const bodyParser = require("body-parser")
@@ -71,6 +78,6 @@ app.get("/", (req,res) => {
     res.send("welcome to home page")
 })
 
-app.listen(8800, () => {
+app.listen(8000, () => {
     console.log("hiiii");
 });
